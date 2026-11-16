@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.IO;
+using System;
 using System.Text.Json;
 
 GameCharacter character = new GameCharacter
@@ -26,6 +27,23 @@ if (loadedCharacter != null)
     Console.WriteLine("\n--- Восстановленный персонаж ---");
     Console.WriteLine($"Имя: {loadedCharacter.Name}");
     Console.WriteLine($"Количество предметов: {loadedCharacter.Inventory.Length}");
+}
+
+string savePath = Path.Combine(AppContext.BaseDirectory, "save.json");
+
+File.WriteAllText(savePath, json);
+Console.WriteLine("\nПерсонаж сохранён в save.json");
+
+string jsonFromFile = File.ReadAllText(savePath);
+GameCharacter? savedCharacter = JsonSerializer.Deserialize<GameCharacter>(jsonFromFile);
+
+if (savedCharacter != null)
+{
+    Console.WriteLine("\n--- Загруженный персонаж ---");
+    Console.WriteLine($"Имя: {savedCharacter.Name}");
+    Console.WriteLine($"Уровень: {savedCharacter.Level}");
+    Console.WriteLine($"Здоровье: {savedCharacter.Health}");
+    Console.WriteLine($"Инвентарь: {string.Join(", ", savedCharacter.Inventory)}");
 }
 
 public class GameCharacter
